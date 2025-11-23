@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROCK PAPER SCISSORS GAME</title>
+    <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+<div class="game-mode">
+        <label for="playerNameInput">Enter Player Name:</label>
+        <input type="text" id="playerNameInput" name="playerNameInput"
+            placeholder="Player Name">
+        <button id="startGameButton">Start Game</button>
+        <label id="greetingMessage"></label>
+        <label id="modeSelectionMessage">Select Game Mode:</label>
+        <label for="modeSelect"> 
+            <select id="modeSelect" name="modeSelect">
+                <option value="single">Single Player</option>
+                <option value="multi">Multiplayer</option>
+            </select>
+        </label>
+        <div class="choices" id="choicesContainer" style="display:none;">
+            <button data-choice="rock">Rock</button>
+            <button data-choice="paper">Paper</button>
+            <button data-choice="scissors">Scissors</button>           
+       </div>
+         <div class="result" id="resultDisplay"></div>
+         <span id="computer-score"></span> 
+        <p id="computerLabel">Computer</p>
+    </div>
+    <div class="winner-announcement" id="winnerAnnouncement"></div>
+    <div class="player-choices"  id="player-choices"></div>
+    <h2>make a move</h2>
+    
+    
+    <script>
+        const startGameButton = document.getElementById('startGameButton');
+        const playerNameInput = document.getElementById('playerNameInput');
+        const greetingMessage = document.getElementById('greetingMessage');
+        const modeSelect = document.getElementById('modeSelect');
+        const choicesContainer = document.getElementById('choicesContainer');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const resetButton = document.getElementById('resetButton');
+
+        let playerName = '';
+        let gameMode = 'single';
+        let playerScore = 0;
+        let computerScore = 0;
+
+        startGameButton.addEventListener('click', () => {
+            playerName = playerNameInput.value.trim() || 'Player';
+            greetingMessage.textContent = `Hello, ${playerName}!`;
+            gameMode = modeSelect.value;
+            choicesContainer.style.display = 'block';
+            resetButton.style.display = 'inline-block';
+            startGameButton.disabled = true;
+            playerNameInput.disabled = true;
+            modeSelect.disabled = true;
+        });
+
+        choicesContainer.addEventListener('click', (event) => {
+            if (event.target.tagName === 'BUTTON') {
+                const playerChoice = event.target.getAttribute('data-choice');
+                playRound(playerChoice);
+            }
+        });
+
+        resetButton.addEventListener('click', () => {
+            playerScore = 0;
+            computerScore = 0;
+            resultDisplay.textContent = '';
+            scoreDisplay.textContent = '';
+            startGameButton.disabled = false;
+            playerNameInput.disabled = false;
+            modeSelect.disabled = false;
+            choicesContainer.style.display = 'none';
+            resetButton.style.display = 'none';
+            greetingMessage.textContent = '';
+        });
+
+        function playRound(playerChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+
+            if (playerChoice === computerChoice) {
+                result = "It's a tie!";
+            } else if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                result = `${playerName} wins! ${playerChoice} beats ${computerChoice}.`;
+                playerScore++;
+            } else {
+                result = `Computer wins! ${computerChoice} beats ${playerChoice}.`;
+                computerScore++;
+            }
+
+            resultDisplay.textContent = result;
+            scoreDisplay.textContent = `${playerName}: ${playerScore} | Computer: ${computerScore}`;
+        }
+    </script>
+    
+</body>
+
+</html>
